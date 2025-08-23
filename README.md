@@ -20,3 +20,4 @@ https://explorer.aptoslabs.com/txn/0x74a454eb3a42e48decdf3826762e452b4c1cf3628eb
 
 
 TOKEN CONTRACT 
+https://explorer.aptoslabs.com/txn/0x37e37e6b6a916a00650d15e6534a850921206db5e5eef12fdd254d5cd274ee8d?network=testnet
