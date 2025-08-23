@@ -17,3 +17,6 @@ https://explorer.aptoslabs.com/txn/0x74a454eb3a42e48decdf3826762e452b4c1cf3628eb
     "vm_status": "Executed successfully"
   }
 }
+
+
+TOKEN CONTRACT 
