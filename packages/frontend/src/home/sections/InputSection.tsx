@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { BadgeInfoIcon, Wand2Icon } from 'lucide-react';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 
 import { Button as BaseButton } from '@/components/ui/button';
 import { cn } from '@/utils/cn';
@@ -41,13 +41,13 @@ export const InputSection = forwardRef<HTMLTextAreaElement, InputSectionProps>(
 
           <TextareaCard className={cn(isFocused && 'focused')}>
             <Textarea
-              // TODO: auto-grow height of textarea
               ref={ref}
               value={value}
               onChange={onChangeValue}
               placeholder="Enter your query here..."
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
+              rows={1}
             />
 
             {!isLoading ? (
@@ -153,18 +153,25 @@ const Textarea = styled.textarea`
   padding: 12px;
   border: 0;
   resize: none;
-
   display: flex;
   flex: 1;
-
   background-color: transparent;
   color: #50e3c2;
   font-size: 14px;
-
+  line-height: 1.4;
+  max-height: 200px; /* cap growth */
+  overflow-y: auto; /* scroll inside when exceeded */
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(80, 227, 194, 0.4);
+    border-radius: 3px;
+  }
   &:focus {
     outline: 0;
   }
-
   &::placeholder {
     color: #9b9cad;
   }

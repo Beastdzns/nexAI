@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import aptosAssistantIllust from '@/assets/aptos-assistant-fit.png';
+import monkeyAnimation from '@/assets/monkey_animation.mp4';
 
 import { AssistantMessageItem } from './components/AssistantMessageItem';
 import { ParameterType } from './components/Block';
@@ -176,95 +177,17 @@ const HomePage: NextPage = () => {
   };
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const sectionOneRef = useRef<HTMLElement | null>(null);
-  const sectionTwoRef = useRef<HTMLElement | null>(null);
-  const contentAreaRef = useRef<HTMLDivElement | null>(null);
-  const isAnimatingRef = useRef(false);
-
-  // Binary snap: user can only be at section 1 (top) or section 2 (monkey)
-  useEffect(() => {
-    const snapDuration = 550;
-    let scrollTimeout: number | null = null;
-
-    const section2 = () => sectionTwoRef.current?.offsetTop || 0;
-
-    const animateTo = (target: number) => {
-      if (isAnimatingRef.current) return;
-      isAnimatingRef.current = true;
-      window.scrollTo({ top: target, behavior: 'smooth' });
-      setTimeout(() => {
-        isAnimatingRef.current = false;
-      }, snapDuration);
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (isAnimatingRef.current) return;
-      const s2Top = section2();
-      if (e.deltaY > 0 && window.scrollY < s2Top) {
-        e.preventDefault();
-        animateTo(s2Top);
-      } else if (e.deltaY < 0 && window.scrollY >= s2Top) {
-        e.preventDefault();
-        animateTo(0);
-      }
-    };
-
-    // Enforce snap if user drags scrollbar or uses keyboard
-    const handleScroll = () => {
-      if (isAnimatingRef.current) return;
-      const s2Top = section2();
-      if (window.scrollY === 0 || window.scrollY === s2Top) return;
-      if (scrollTimeout) window.clearTimeout(scrollTimeout);
-      scrollTimeout = window.setTimeout(() => {
-        const midpoint = s2Top / 2;
-        animateTo(window.scrollY < midpoint ? 0 : s2Top);
-      }, 80); // quick snap after user input pause
-    };
-
-    // Touch (binary)
-    let touchStartY = 0;
-    const onTouchStart = (ev: TouchEvent) => {
-      touchStartY = ev.touches[0].clientY;
-    };
-    const onTouchEnd = (ev: TouchEvent) => {
-      if (isAnimatingRef.current) return;
-      const delta =
-        touchStartY - (ev.changedTouches[0]?.clientY || touchStartY);
-      const s2Top = section2();
-      if (delta > 20 && window.scrollY < s2Top) {
-        animateTo(s2Top);
-      } else if (delta < -20 && window.scrollY >= s2Top) {
-        animateTo(0);
-      } else {
-        // minor swipe: still enforce nearest
-        const midpoint = s2Top / 2;
-        animateTo(window.scrollY < midpoint ? 0 : s2Top);
-      }
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, []);
+  const chatScrollRef = useRef<HTMLDivElement>(null);
+  // (Removed snap scrolling; allow natural page scroll)
   // const bottomBarRef = useRef<HTMLFormElement>(null);
   useEffect(() => {
-    // Only auto-scroll conversation if we are on section 1
-    if (window.scrollY !== 0) return;
-    setTimeout(() => {
-      if (!containerRef.current) return;
-      window.scrollTo({
-        top: 0, // keep view pinned at top section
-        behavior: 'instant' as ScrollBehavior,
+    // Scroll chat area to bottom when messages update
+    const el = chatScrollRef.current;
+    if (el) {
+      requestAnimationFrame(() => {
+        el.scrollTop = el.scrollHeight;
       });
-    });
+    }
   }, [messages]);
 
   return (
@@ -276,7 +199,7 @@ const HomePage: NextPage = () => {
           }}
         />
       </NavWrapper>
-      <SectionOne ref={sectionOneRef}>
+      <SectionOne>
         <DecorationLeft aria-hidden="true">
           <Image
             src="/assets/left.png"
@@ -295,7 +218,7 @@ const HomePage: NextPage = () => {
             priority
           />
         </DecorationRight>
-        <ContentArea ref={contentAreaRef}>
+        <ContentArea>
           {messages.length === 0 && (
             <Image
               className="w-[100px] h-[100px]"
@@ -308,35 +231,39 @@ const HomePage: NextPage = () => {
           <Main>
             {messages.length > 0 && (
               <>
-                <MessageList ref={containerRef}>
-                  {messages.map((message, index) => {
-                    if (message.role === 'user') {
-                      return <UserMessageItem key={index} message={message} />;
-                    }
-                    if (message.role === 'assistant') {
-                      return (
-                        <AssistantMessageItem key={index} message={message} />
-                      );
-                    }
-                    if (message.role === 'tool') {
-                      return (
-                        <ToolMessageItem
-                          key={index}
-                          id={index.toString()}
-                          message={message}
-                        />
-                      );
-                    }
-                    return <ErrorMessageItem key={index} message={message} />;
-                  })}
-                </MessageList>
-                <motion.div
-                  animate={isLoading ? { scale: [1, 0.66, 1] } : undefined}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                  style={{ width: 100, height: 100, marginRight: 'auto' }}
-                >
-                  <Image alt="" src={aptosAssistantIllust} />
-                </motion.div>
+                <ChatScroll ref={chatScrollRef}>
+                  <MessageList>
+                    {messages.map((message, index) => {
+                      if (message.role === 'user') {
+                        return (
+                          <UserMessageItem key={index} message={message} />
+                        );
+                      }
+                      if (message.role === 'assistant') {
+                        return (
+                          <AssistantMessageItem key={index} message={message} />
+                        );
+                      }
+                      if (message.role === 'tool') {
+                        return (
+                          <ToolMessageItem
+                            key={index}
+                            id={index.toString()}
+                            message={message}
+                          />
+                        );
+                      }
+                      return <ErrorMessageItem key={index} message={message} />;
+                    })}
+                  </MessageList>
+                  <motion.div
+                    animate={isLoading ? { scale: [1, 0.66, 1] } : undefined}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                    style={{ width: 100, height: 100, marginRight: 'auto' }}
+                  >
+                    <Image alt="" src={aptosAssistantIllust} />
+                  </motion.div>
+                </ChatScroll>
               </>
             )}
             {messages.length === 0 && (
@@ -357,7 +284,16 @@ const HomePage: NextPage = () => {
           </Main>
         </ContentArea>
       </SectionOne>
-      <MonkeySection ref={sectionTwoRef} aria-hidden="true" />
+      <MonkeySection aria-hidden="true">
+        <VideoBackground
+          src={monkeyAnimation as unknown as string}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+      </MonkeySection>
     </>
   );
 };
@@ -374,7 +310,7 @@ const NavWrapper = styled.div`
 
 const SectionOne = styled.section`
   position: relative;
-  min-height: 100vh;
+  height: 100vh; /* lock to viewport */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -423,28 +359,61 @@ const ContentArea = styled.div`
   z-index: 1;
   max-width: 800px;
   width: 100%;
-  min-height: calc(100vh - 64px);
+  height: calc(100vh - 64px);
   margin: 0 auto;
-  padding: 40px 12px 64px;
+  padding: 32px 12px 16px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 24px;
+  gap: 16px;
 `;
 
 const MonkeySection = styled.section`
   height: 100vh;
   width: 100%;
-  background: url('/assets/monkey.png') center / cover no-repeat fixed;
   position: relative;
+  overflow: hidden;
+  background: black;
+`;
+
+const VideoBackground = styled.video`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  filter: brightness(0.9);
 `;
 
 const Main = styled.main`
   width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  gap: 16px;
+  min-height: 0; /* allow flex child overflow */
+`;
+
+const ChatScroll = styled.div`
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-right: 4px;
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 3px;
+  }
 `;
 
 const MessageList = styled.div`
