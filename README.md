@@ -43,10 +43,10 @@ nexAI is an AI‑driven autonomous assistant that:
 - Monorepo: Yarn 4 workspaces + Turborepo.
 
 ## Deployed Contracts
-``` json
+
 MULTISWAPPER CONTRACT 
 https://explorer.aptoslabs.com/txn/0x74a454eb3a42e48decdf3826762e452b4c1cf3628eb2af8c4eadcdd0fc3a46ab?network=testnet
-
+``` json
 {
   "Result": {
     "transaction_hash": "0x74a454eb3a42e48decdf3826762e452b4c1cf3628eb2af8c4eadcdd0fc3a46ab",
