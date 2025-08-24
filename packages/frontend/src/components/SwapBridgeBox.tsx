@@ -152,7 +152,7 @@ export const SwapBridgeBox: React.FC = () => {
           </Button>
         </Action>
         <Disclaimer>
-          Demo only. Connect wallet & backend to enable real bridging.
+          Demo UI only. Actual demonstration presented by the creator.
         </Disclaimer>
       </Content>
     </Wrapper>
