@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { nexaiLogo as _nexaiLogo } from '@/components/nexaiLogo';
 import { Reveal } from '@/components/Reveal';
+import { nexaiLogo as _nexaiLogo } from '@/components/nexaiLogo';
 import { Button } from '@/components/ui/button';
 import { float } from '@/styles/motion';
 
@@ -22,8 +22,8 @@ export const Header: React.FC = () => {
           />
         </IllustWrapper>
         <Gradient />
-        <nexaiLogoContainer>
-          <nexaiLogo width={438} height={94} />
+        <NexaiLogoContainer>
+          <NexaiLogo width={438} height={94} />
           <h1 className="sr-only">nexai</h1>
 
           <div className="absolute min-w-[438px]">
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
             width={107}
             height={16}
           />
-        </nexaiLogoContainer>
+        </NexaiLogoContainer>
       </IllustContainer>
 
       <div className="flex mt-[-42px] z-10">
@@ -115,7 +115,7 @@ const Gradient = styled.div`
   left: 0;
   right: 0;
 `;
-const nexaiLogoContainer = styled.div`
+const NexaiLogoContainer = styled.div`
   height: 94px;
 
   width: 438px;
@@ -129,7 +129,7 @@ const nexaiLogoContainer = styled.div`
   left: 50%;
   right: 0;
 `;
-const nexaiLogo = styled(_nexaiLogo)`
+const NexaiLogo = styled(_nexaiLogo)`
   width: 438px;
   height: 94px;
   display: flex;

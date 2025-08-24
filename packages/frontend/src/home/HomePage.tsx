@@ -16,6 +16,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import aptosAssistantIllust from '@/assets/aptos-assistant-fit.png';
 import monkeyAnimation from '@/assets/monkey_animation.mp4';
+import { SwapBridgeBox } from '@/components/SwapBridgeBox';
 
 import { AssistantMessageItem } from './components/AssistantMessageItem';
 import { ParameterType } from './components/Block';
@@ -284,7 +285,7 @@ const HomePage: NextPage = () => {
           </Main>
         </ContentArea>
       </SectionOne>
-      <MonkeySection aria-hidden="true">
+      <MonkeySection>
         <VideoBackground
           src={monkeyAnimation as unknown as string}
           autoPlay
@@ -293,6 +294,9 @@ const HomePage: NextPage = () => {
           playsInline
           preload="auto"
         />
+        <MonkeyOverlay>
+          <SwapBridgeBox />
+        </MonkeyOverlay>
       </MonkeySection>
     </>
   );
@@ -373,6 +377,16 @@ const MonkeySection = styled.section`
   position: relative;
   overflow: hidden;
   background: black;
+`;
+
+const MonkeyOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 56px; /* space from bottom if needed */
+  z-index: 2;
 `;
 
 const VideoBackground = styled.video`

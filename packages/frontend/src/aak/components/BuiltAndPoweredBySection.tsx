@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 
-import { nexaiLogo as _nexaiLogo } from '@/components/nexaiLogo';
 import {
   PoweredByAave,
   PoweredByAptos,
@@ -10,6 +9,7 @@ import {
   PoweredByNodit,
   PoweredByThala,
 } from '@/components/ProtocolLogos';
+import { nexaiLogo as _nexaiLogo } from '@/components/nexaiLogo';
 
 const LOGOS = [
   { logo: <PoweredByAptos height={22} />, name: 'aptos' },
@@ -30,7 +30,7 @@ export const BuiltAndPoweredBySection: React.FC = () => {
     <Container>
       <Section>
         <Title className="!text-black">Proudly built by</Title>
-        <nexaiLogo />
+        <NexaiLogo />
       </Section>
       <Divider />
       <Section>
@@ -95,7 +95,7 @@ const Title = styled.span`
   line-height: 94%; /* 15.04px */
 `;
 
-const nexaiLogo = styled(_nexaiLogo)`
+const NexaiLogo = styled(_nexaiLogo)`
   // have 16px gap on top
   margin-top: -4px;
 
