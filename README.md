@@ -1,5 +1,5 @@
 # nexAI Monorepo
-
+### [https://www.canva.com/design/DAGw9L71g1Q/qxfd018QAgpYiuQsENpgyA/edit](Presentation Link) 
 <div align="center">
   <h1>nexAI</h1>
   <p><strong>AI Agent for On‑Chain Finance:</strong> multi‑chain token swaps, lending / borrowing (Echelon ecosystem), DeFi data insights, and cross‑chain <em>atomic swap</em> flows between Aptos and Ethereum.</p>
