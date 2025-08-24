@@ -15,6 +15,7 @@ nexAI is an AI‑driven autonomous assistant that:
 - Retrieves structured on‑chain & DeFi analytics (prices, TVL, protocol stats, coin metadata).
 - Orchestrates cross‑chain atomic swap intent flows between Aptos and Ethereum (in progress: finalization logic / relayer layer).
 - Explains actions before broadcasting transactions for transparency.
+![2025-08-2411-23-19-ezgif com-video-to-gif-converter (2)](https://github.com/user-attachments/assets/ba86a4ea-d654-4bd7-b530-67790b6110d2)
 
 ## ✨ Core Features
 
