@@ -1,0 +1,16 @@
+[package]
+name = "CrossChainSwapAptos"
+version = "1.0.0"
+authors = ["CrossChain Team"]
+
+[addresses]
+cross_chain_swap = "0x5ac6a79cde1c926bf2021727adf74f7eedcca438be6a5be0d4629ef638ba9a98"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
